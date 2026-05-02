@@ -1,0 +1,6 @@
+__pycache__/
+.matplotlib-cache/
+.vscode/
+.codex
+*.task
+captures/

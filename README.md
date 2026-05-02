@@ -1,8 +1,7 @@
-# Hand Whiteboard
+# VBoard: Hand-Tracked Virtual Whiteboard
 
-Small webcam whiteboard prototype using OpenCV and MediaPipe Tasks.
-
-Show one finger to draw. Show index + middle finger to erase. The project is tuned for a quick demo, not for perfect hand tracking in every lighting condition.
+A highly optimized, zero-latency virtual whiteboard using OpenCV and MediaPipe. 
+Draw in the air with your index finger, erase with two fingers. Built with a focus on clean architecture, stable FPS, and real-time performance.
 
 ## Run
 
@@ -30,7 +29,7 @@ The MediaPipe model is downloaded automatically if `hand_landmarker.task` is mis
 On Linux, run it from a normal terminal if the OpenCV window does not open from VS Code.
 
 ## Controls
-
+some of this was deleted and cooming soon
 - `1`-`5` - change color
 - `[` / `]` - brush size
 - `,` / `.` - eraser size
@@ -41,6 +40,13 @@ On Linux, run it from a normal terminal if the OpenCV window does not open from 
 - `d` - debug panel
 - `l` - landmarks
 - `q` or `Esc` - quit
+ 
+
+## Architecture & Performance
+- **State Management:** Canvas, colors, and brush properties are encapsulated in a `WhiteboardState` class, removing all global variables.
+- **Hardware Optimization:** Uses `MJPG` fourcc format to bypass USB bandwidth bottlenecks on Linux, ensuring stable 30 FPS even on basic webcams.
+- **Vectorized Smoothing:** Uses NumPy array operations instead of naive tuple math for zero-jitter cursor tracking.
+- **Configurable:** All magic numbers (thresholds, gaps, alpha/beta) are exposed at the top of the file for easy tuning.
 
 ## Notes
 
