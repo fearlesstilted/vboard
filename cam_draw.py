@@ -55,7 +55,13 @@ def open_camera():
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, W)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, H)
     cap.set(cv2.CAP_PROP_FPS, TARGET_FPS)
-    return cap
+
+    ret, frame = cap.read()
+    if not ret:
+        raise RuntimeError("Camera is not responding")
+        
+    real_h, real_w = frame.shape[:2]
+    return cap, real_h, real_w
 
 def points_from_landmarks(hand):
     return [(int(np.clip(lm.x * W, 0, W - 1)), int(np.clip(lm.y * H, 0, H - 1))) for lm in hand]
@@ -177,7 +183,7 @@ def save_canvas(canvas):
 def main():
     ensure_model()
     detector = create_detector()
-    cap = open_camera()
+    cap, real_w, real_h = open_camera()
     state = WhiteboardState(W, H)
     flags = {"hud": True, "help": False, "debug": False, "landmarks": False}
     last_time = time.monotonic()
@@ -186,7 +192,8 @@ def main():
         while cap.isOpened():
             ok, frame = cap.read()
             if not ok: break
-
+            
+            frame = cv2.resize(frame, (W, H))
             hands = process_frame(frame, detector)
             if hands:
                 update_state(state, hands)
